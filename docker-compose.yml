@@ -1,0 +1,28 @@
+version: '3'
+services:
+  db2: 
+    image: mysql:latest
+    environment:
+      - MYSQL_DATABASE=converter-unit
+      - MYSQL_USER=php_docker
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=root_password
+    volumes:
+      - "./db:/docker-entrypoint-initdb.d"
+
+  php:
+    build:
+      context: .  # Le chemin vers le répertoire contenant votre Dockerfile PHP
+    volumes:
+      - ".:/var/www/html"
+    ports:
+      - 80:80
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8000:80
+    environment:
+      PMA_HOST: db2  # Nom du service MySQL
+      PMA_PORT: 3306
+
